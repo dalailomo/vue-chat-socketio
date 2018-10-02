@@ -21,8 +21,8 @@ export default {
   },
 
   mounted() {
-    this.$socket.on('client-nudged', data => {
-      this.snackbar.text = `${data.from} nudged you!, he said ${data.msg}`
+    this.$socket.on('client-notification', data => {
+      this.snackbar.text = data.msg
       this.snackbar.visible = true
     })
   },

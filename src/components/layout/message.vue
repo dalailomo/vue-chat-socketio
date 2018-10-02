@@ -11,6 +11,7 @@
 <script>
 export default {
   props: ['align', 'message'],
+
   computed: {
     colour: function() {
       if (this.align === 'right') return 'primary'

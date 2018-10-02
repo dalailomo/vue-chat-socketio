@@ -4,19 +4,17 @@
       <v-flex xs12>
           <v-toolbar color="pink" dark>
             <v-toolbar-side-icon>
-              <a href="/">
-                <v-btn icon>
+                <v-btn icon @click="onClick">
                   <v-icon large>keyboard_arrow_left</v-icon>
                 </v-btn>
-              </a>
             </v-toolbar-side-icon>
             <v-toolbar-title>Chat with {{idUser}}</v-toolbar-title>
             <v-spacer></v-spacer>
           </v-toolbar>
       </v-flex>
     </v-layout>
-    <Message align="right" message="Holi"></Message>
-    <Message align="left" message="Heyy"></Message>
+    <!-- <Message align="right" message="Holi"></Message>
+    <Message align="left" message="Heyy"></Message> -->
     <v-footer fixed
       class="padding10">
       <v-layout row
@@ -36,38 +34,47 @@
 </template>
 
 <script>
-import SocketList from '@/components/SocketList'
-import Message from '@/components/Message'
+import Message from '@/components/layout/message'
 import { mapGetters } from 'vuex'
 
 export default {
   components: {
-    SocketList,
-    Message,
+    'message': Message,
   },
+
   data() {
     return {
       msg: '',
     }
   },
+
   props: ['idUser'],
+
   computed: {
     ...mapGetters([
       'messages',
     ]),
+
     parsedMessages: () => {
       return this.messages.map(m => m.text)
     },
   },
+
   methods: {
     sendMessage() {
       this.$store.dispatch('addMessage', { from: this.$socket.id, to: this.idUser, text: this.msg })
+
       this.$socket.emit('send-message', {
         from: this.$socket.id,
         to: this.idUser,
         message: { from: this.$socket.id, to: this.idUser, text: this.msg },
       })
+
       this.msg = ''
+    },
+
+    onClick() {
+      this.$router.push({ name: 'home' })
     },
   },
 }

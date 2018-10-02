@@ -1,25 +1,27 @@
 <template>
   <v-app id="app">
-    <SocketNotification />
-    <NudgeNotification />
+    <notification />
     <router-view />
   </v-app>
 </template>
 
 <script>
-import SocketNotification from '@/components/SocketNotification'
-import NudgeNotification from '@/components/NudgeNotification'
+import Notification from '@/components/layout/notification'
+import { mapActions } from 'vuex'
 
 export default {
   components: {
-    SocketNotification,
-    NudgeNotification,
+    'notification': Notification,
   },
-  mounted() {
-    this.$socket.on('send-message', data => {
-      debugger
-      this.$store.dispatch('addMessage', { from: data.message.from, to: data.message.to, text: data.message.text })
-    })
+
+  sockets: {
+    connect: function() {
+      this.setMyClientId(this.$socket.id)
+    },
+  },
+
+  methods: {
+    ...mapActions(['setMyClientId']),
   },
 }
 </script>
