@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import Home from '@/containers/Home'
-import Chat from '@/containers/Chat'
+import Home from '@/components/Home'
+import Chat from '@/components/Chat'
 
 Vue.use(Router)
 
