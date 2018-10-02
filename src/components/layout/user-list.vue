@@ -2,13 +2,13 @@
   <div>
     <h3>Connected clients</h3>
     <v-list two-line>
-      <template v-for="(item, index) in clients">
-        <v-list-tile v-if="$socket.id !== item" :key="item" avatar @click.native="onClick($socket.id)">
+      <template v-for="(clientId, index) in clients">
+        <v-list-tile v-if="$socket.id !== clientId" :key="clientId" avatar @click.native="onClick(clientId)">
           <v-list-tile-avatar>
             <img src="http://placekitten.com/50/50">
           </v-list-tile-avatar>
           <v-list-tile-content>
-            <v-list-tile-title v-html="item"></v-list-tile-title>
+            <v-list-tile-title v-html="clientId"></v-list-tile-title>
           </v-list-tile-content>
         </v-list-tile>
       </template>

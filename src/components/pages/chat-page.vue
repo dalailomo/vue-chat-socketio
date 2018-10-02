@@ -8,7 +8,7 @@
                   <v-icon large>keyboard_arrow_left</v-icon>
                 </v-btn>
             </v-toolbar-side-icon>
-            <v-toolbar-title>Chat with {{idUser}}</v-toolbar-title>
+            <v-toolbar-title>Chat with <pre>{{ $route.params.idUser }}</pre></v-toolbar-title>
             <v-spacer></v-spacer>
           </v-toolbar>
       </v-flex>
