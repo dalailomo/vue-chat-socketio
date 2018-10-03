@@ -11,26 +11,21 @@ app.use((req, res, next) => {
   next();
 })
 
-app.get('/clients', (req, res) => {
-  res.send(Object.keys(io.sockets.clients().connected))
-})
-
 io.on('connection', socket => {
   console.log(`A user connected with socket id ${socket.id}`)
 
-  socket.broadcast.emit('user-connected', socket.id)
+  io.emit('client-connected', socket.id)
 
-  socket.on('disconnect', () => {
-    socket.broadcast.emit('user-disconnected', socket.id)
+  socket.on('get-client-list', data => {
+    io.to(socket.id).emit('client-list-given', Object.keys(io.sockets.clients().connected))
   })
 
-  socket.on('nudge-client', data => {
-    socket.broadcast.to(data.to).emit('client-nudged', data)
+  socket.on('disconnect', () => {
+    socket.broadcast.emit('client-disconnected', socket.id)
   })
 
   socket.on('send-message', data => {
-    console.log(data.to)
-    socket.broadcast.to(data.to).emit('send-message', data)
+    io.to(data.to).emit('message-sent', data)
   })
 })
 

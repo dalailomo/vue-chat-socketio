@@ -1,56 +1,43 @@
-import api from './../../api'
-import * as mutation from './../mutation-types'
+const SET_MY_CLIENT_ID = 'SET_MY_CLIENT_ID'
+const SET_CLIENT_LIST = 'SET_CLIENT_LIST'
 
 const state = {
+  myClientId: null,
   clients: [],
-  messages: [],
-  loading: false,
 }
 
 const getters = {
-  clientList: (state) => state.clients,
-  messages: (state) => state.messages,
+  myClientId: (state) => state.myClientId,
+  clients: (state) => state.clients,
 }
 
 const mutations = {
-  [mutation.SET_CLIENT_LIST](state, payload) {
-    state.clients = payload
+  [SET_MY_CLIENT_ID](state, myClientId) {
+    state.myClientId = myClientId
   },
-  [mutation.IS_LOADING_CLIENT_LIST](state, payload) {
-    state.loading = payload
-  },
-  [mutation.ADD_MESSAGE](state, message) {
-    state.messages.push(message)
+
+  [SET_CLIENT_LIST](state, clientList) {
+    state.clients = clientList
   },
 }
 
 const actions = {
-  getConnectedClients: ({ commit }) => new Promise((resolve, reject) => {
-    const onSuccess = (response) => {
-      commit(mutation.SET_CLIENT_LIST, response.body)
-      commit(mutation.IS_LOADING_CLIENT_LIST, false)
+  getConnectedClients: (ctx, socket) => new Promise((resolve, reject) => {
+    socket.emit('get-client-list', { clientId: socket.id })
 
-      resolve(response)
-    }
-
-    const onError = (error) => {
-      commit(mutation.SET_CLIENT_LIST, [])
-      commit(mutation.IS_LOADING_CLIENT_LIST, false)
-      reject(error)
-    }
-
-    commit(mutation.IS_LOADING_CLIENT_LIST, true)
-
-    api.getConnectedClients().then(onSuccess).catch(onError)
+    resolve()
   }),
-  addMessage: ({ commit }, message) => new Promise((resolve, reject) => {
-    debugger
-    try {
-      commit(mutation.ADD_MESSAGE, {from: message.from, to: message.to, text: message.text})
-      resolve('Ok')
-    } catch (error) {
-      reject(error)
-    }
+
+  setConnectedClients: (ctx, clients) => new Promise((resolve, reject) => {
+    ctx.commit(SET_CLIENT_LIST, clients)
+
+    resolve()
+  }),
+
+  setMyClientId: (ctx, clientId) => new Promise((resolve, reject) => {
+    ctx.commit(SET_MY_CLIENT_ID, clientId)
+
+    resolve()
   }),
 }
 
