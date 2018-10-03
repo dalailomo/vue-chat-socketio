@@ -1,30 +1,33 @@
 <template>
   <v-snackbar
     :timeout="3000"
-    bottom
-    v-model="snackbar.visible"
+    top
+    v-model="visible"
   >
-    {{ snackbar.text }}
-    <v-btn flat color="pink" @click.native="snackbar.visible = false">Close</v-btn>
+    {{ notification }}
+    <v-btn flat color="pink" @click.native="visible = false">Close</v-btn>
   </v-snackbar>
 </template>
 
 <script>
+import { mapGetters, mapActions } from 'vuex'
+
 export default {
-  data() {
-    return {
-      snackbar: {
-        visible: false,
-        text: '',
+  computed: {
+    ...mapGetters(['notification', 'isVisible']),
+
+    visible: {
+      get: function() {
+        return this.isVisible
       },
-    }
+      set: function(newValue) {
+        this.setNotificationVisibility(newValue)
+      },
+    },
   },
 
-  mounted() {
-    this.$socket.on('client-notification', data => {
-      this.snackbar.text = data.msg
-      this.snackbar.visible = true
-    })
+  methods: {
+    ...mapActions(['setNotificationVisibility']),
   },
 }
 </script>

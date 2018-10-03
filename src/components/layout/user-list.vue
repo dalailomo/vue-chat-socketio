@@ -51,6 +51,8 @@ export default {
     this.$socket.on('client-list-given', list => {
       this.setConnectedClients(list)
     })
+
+    this.getConnectedClients(this.$socket)
   },
 }
 </script>

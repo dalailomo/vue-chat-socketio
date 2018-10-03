@@ -14,10 +14,7 @@
       :key="index"
       :align="message.from === $route.params.idUser ? 'left' : 'right'"
       :message="message.text"
-      v-if="message.from === myClientId
-        || message.to === myClientId
-        || message.to === $route.params.idUser
-        || message.from === $route.params.idUser" />
+      v-if="message.to === $route.params.idUser || message.from === $route.params.idUser" />
 
     <v-footer fixed style="padding: 0 0 0 18px;">
         <v-text-field
@@ -63,16 +60,6 @@ export default {
     onClick() {
       this.$router.push({ name: 'home' })
     },
-  },
-
-  mounted() {
-    if (this.$socket._callbacks['$message-sent']) {
-      return
-    }
-
-    this.$socket.on('message-sent', msgPayload => {
-      this.pushMessage(msgPayload)
-    })
   },
 }
 </script>
