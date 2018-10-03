@@ -1,41 +1,37 @@
 <template>
   <div>
-    <v-layout row>
-      <v-flex xs12>
-          <v-toolbar color="pink" dark>
-            <v-toolbar-side-icon>
-                <v-btn icon @click="onClick">
-                  <v-icon large>keyboard_arrow_left</v-icon>
-                </v-btn>
-            </v-toolbar-side-icon>
-            <v-toolbar-title>Chat with <pre>{{ $route.params.idUser }}</pre></v-toolbar-title>
-            <v-spacer></v-spacer>
-          </v-toolbar>
-      </v-flex>
-    </v-layout>
-    <!-- <Message align="right" message="Holi"></Message>
-    <Message align="left" message="Heyy"></Message> -->
-    <v-footer fixed
-      class="padding10">
-      <v-layout row
-      height="100px">
-        <v-flex xs12>
-          <v-text-field
-            label="Outline"
-            outline
-            append-icon="send"
-            @click:append="sendMessage"
-            v-model="msg"
-          ></v-text-field>
-        </v-flex>
-      </v-layout>
+    <v-toolbar color="pink" dark>
+      <v-toolbar-side-icon>
+          <v-btn icon @click="onClick">
+            <v-icon large>keyboard_arrow_left</v-icon>
+          </v-btn>
+      </v-toolbar-side-icon>
+      <v-toolbar-title>Chat with <pre>{{ $route.params.idUser }}</pre></v-toolbar-title>
+      <v-spacer></v-spacer>
+    </v-toolbar>
+
+    <message v-for="(message, index) in messages"
+      :key="index"
+      :align="message.from === $route.params.idUser ? 'left' : 'right'"
+      :message="message.text"
+      v-if="message.from === myClientId
+        || message.to === myClientId
+        || message.to === $route.params.idUser
+        || message.from === $route.params.idUser" />
+
+    <v-footer fixed style="padding: 0 0 0 18px;">
+        <v-text-field
+          label="Message"
+          v-model="msg"
+        ></v-text-field>
+        <v-btn small flat @click="sendMessage"><v-icon>send</v-icon></v-btn>
     </v-footer>
   </div>
 </template>
 
 <script>
 import Message from '@/components/layout/message'
-import { mapGetters } from 'vuex'
+import { mapGetters, mapActions } from 'vuex'
 
 export default {
   components: {
@@ -48,27 +44,18 @@ export default {
     }
   },
 
-  props: ['idUser'],
-
   computed: {
-    ...mapGetters([
-      'messages',
-    ]),
-
-    parsedMessages: () => {
-      return this.messages.map(m => m.text)
-    },
+    ...mapGetters(['messages', 'myClientId']),
   },
 
   methods: {
-    sendMessage() {
-      this.$store.dispatch('addMessage', { from: this.$socket.id, to: this.idUser, text: this.msg })
+    ...mapActions(['pushMessage']),
 
-      this.$socket.emit('send-message', {
-        from: this.$socket.id,
-        to: this.idUser,
-        message: { from: this.$socket.id, to: this.idUser, text: this.msg },
-      })
+    sendMessage() {
+      const msgPayload = { from: this.$socket.id, to: this.$route.params.idUser, text: this.msg }
+
+      this.pushMessage(msgPayload)
+      this.$socket.emit('send-message', msgPayload)
 
       this.msg = ''
     },
@@ -77,11 +64,15 @@ export default {
       this.$router.push({ name: 'home' })
     },
   },
+
+  mounted() {
+    if (this.$socket._callbacks['$message-sent']) {
+      return
+    }
+
+    this.$socket.on('message-sent', msgPayload => {
+      this.pushMessage(msgPayload)
+    })
+  },
 }
 </script>
-
-<style>
-.padding10 {
-  padding: 10px;
-}
-</style>

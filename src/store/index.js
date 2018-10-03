@@ -2,6 +2,7 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 import VueResource from 'vue-resource'
 import clients from './modules/clients'
+import messages from './modules/messages'
 
 Vue.use(Vuex)
 Vue.use(VueResource)
@@ -9,6 +10,7 @@ Vue.use(VueResource)
 export default new Vuex.Store({
   modules: {
     clients,
+    messages,
   },
   strict: true,
 })

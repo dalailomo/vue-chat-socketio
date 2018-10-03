@@ -25,7 +25,7 @@ io.on('connection', socket => {
   })
 
   socket.on('send-message', data => {
-    io.to(socket.id).emit('message-sent', data)
+    io.to(data.to).emit('message-sent', data)
   })
 })
 

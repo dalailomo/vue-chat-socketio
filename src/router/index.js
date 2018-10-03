@@ -16,7 +16,6 @@ export default new Router({
     {
       path: '/chat/:idUser',
       name: 'chat',
-      props: true,
       component: ChatPage,
     },
   ],

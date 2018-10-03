@@ -1,6 +1,9 @@
 <template>
   <v-card>
-    <v-card-title><h1>Hello there!</h1><pre>{{ myClientId }}</pre></v-card-title>
+    <v-card-title><h1>Hello there!</h1></v-card-title>
+    <v-card-text>
+      <pre>My id: {{ myClientId }}</pre>
+    </v-card-text>
     <v-divider />
     <v-card-text>
       <user-list />
