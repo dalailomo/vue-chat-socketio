@@ -40,4 +40,6 @@ $ node server.js
 
 # TL;DR With Vuex
 
+Emitting an event from the server called `EVENTAKO_HOYGA`, will trigger a mutation commit in the store, prefixed with `SOCKET_`, so the mutation method im this case should be named `SOCKET_EVENTAKO_HOYGA`.
+
 ![With vuex](/withvuex.png)
