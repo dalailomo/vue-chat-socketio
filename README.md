@@ -30,7 +30,13 @@ $ node server.js
 
 # TL;DR Usage
 
-![Usage](/quick.png)
+## Server
+
+![Usage](/quick-1.png)
+
+## Frontend app
+
+![Usage](/quick-2.png)
 
 # TL;DR With Vuex
 
